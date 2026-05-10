@@ -8,7 +8,6 @@ function App() {
   return (
     <>
     <Portfolio />
-    <p>hello iam othmane </p>
     </>
   )
 }
