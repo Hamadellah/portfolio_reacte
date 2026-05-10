@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
+import myImage from './IMG_9524.webp';
 const COLORS = {
   cyan: "#00f5ff",
   purple: "#b855ff",
@@ -257,7 +257,11 @@ function HeroSection() {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 80,
               }}>
-                <img src="" alt="" />
+                <img 
+  src={myImage} 
+  style={{ width: '400px', height: '400px', objectFit: 'cover',marginTop:'49px' }} 
+  alt="Othmane" 
+/>
               </div>
             </div>
             {[{ top: "5%", right: "5%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "0%", label: "CCNA", icon: "🌐" }, { top: "40%", right: "-5%", label: "Linux", icon: "🐧" }].map(({ top, right, bottom, left, label, icon }) => (
