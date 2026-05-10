@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import myImage from './IMG_9524.webp';
+import myImage from './othmane12.webp';
 const COLORS = {
   cyan: "#00f5ff",
   purple: "#b855ff",
@@ -274,7 +274,11 @@ function HeroSection() {
             <div style={{ position: "absolute", inset: -3, borderRadius: "50%", background: "linear-gradient(135deg, #00f5ff, #b855ff, #4f8ef7)", animation: "spin 8s linear infinite" }} />
             <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: COLORS.dark, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
               <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, rgba(0,245,255,0.1), rgba(184,85,255,0.1))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: isMobile ? 56 : 72 }}>
-               <img src={myImage} width="330" height="330" alt="Othmane" />
+               <img
+  src={myImage}
+  alt="Othmane"
+  className="w-[250px] h-[250px] md:w-[330px] md:h-[330px]"
+/>
               </div>
             </div>
             {!isMobile && [{ top: "5%", right: "0%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "-5%", label: "CCNA", icon: "🌐" }, { top: "40%", right: "-8%", label: "Linux", icon: "🐧" }].map(({ top, right, bottom, left, label, icon }) => (
