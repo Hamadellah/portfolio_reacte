@@ -35,6 +35,7 @@ function useTypingEffect(texts, speed = 80) {
 }
 
 function useIsMobile() {
+ 
   const [mobile, setMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
     const fn = () => setMobile(window.innerWidth < 768);
@@ -218,7 +219,7 @@ function SectionHeader({ tag, title, center = false }) {
 }
 
 function HeroSection() {
-  const typed = useTypingEffect(["Infrastructure Engineer", "Web Developer", "PHP/Laravel Expert", "Network Specialist", "Problem Solver"]);
+  const typed = useTypingEffect(["Full-Stack Web Developer", "PHP/Laravel Developer", "React Developer", "Network & Systems Specialist", "Problem Solver"]);
   const isMobile = useIsMobile();
   return (
     <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: isMobile ? "80px 1.25rem 3rem" : "0 2rem" }}>
@@ -247,7 +248,7 @@ function HeroSection() {
           </Reveal>
           <Reveal effect="fadeLeft" delay={440}>
           <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.8, maxWidth: 480, marginBottom: "2rem", fontSize: 15, fontFamily: "'Space Grotesk', sans-serif" }}>
-            Specialized in digital infrastructure & web development. Building secure, scalable, and elegant solutions from the network layer up to the application layer.
+            Full-stack web developer certified in PHP/Laravel, also trained as a Digital Infrastructure Technician (Systems & Networks). I build complete, secure digital solutions — from the network layer up to the application layer.
           </p>
           </Reveal>
           <Reveal effect="fadeUp" delay={560}>
@@ -258,7 +259,7 @@ function HeroSection() {
           </Reveal>
           <Reveal effect="fadeUp" delay={700}>
           <div style={{ display: "flex", gap: "1.5rem", marginTop: "2.5rem" }}>
-            {[["2+", "Years Exp."], ["10+", "Projects"], ["2", "CCNA Certs"]].map(([n, l]) => (
+            {[["2", "Featured Projects"], ["2", "CCNA Certs"], ["FR/EN/AR", "Languages"]].map(([n, l]) => (
               <div key={l}>
                 <div style={{ fontSize: 26, fontWeight: 800, background: "linear-gradient(135deg, #00f5ff, #b855ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontFamily: "'Space Grotesk', sans-serif" }}>{n}</div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'Space Grotesk', sans-serif" }}>{l}</div>
@@ -281,7 +282,7 @@ function HeroSection() {
 />
               </div>
             </div>
-            {!isMobile && [{ top: "5%", right: "0%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "-5%", label: "CCNA", icon: "🌐" }, { top: "40%", right: "-8%", label: "Linux", icon: "🐧" }].map(({ top, right, bottom, left, label, icon }) => (
+            {!isMobile && [{ top: "5%", right: "0%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "-5%", label: "React", icon: "⚛️" }, { top: "40%", right: "-8%", label: "CCNA", icon: "🌐" }].map(({ top, right, bottom, left, label, icon }) => (
               <div key={label} style={{ position: "absolute", top, right, bottom, left, background: "rgba(10,10,26,0.9)", border: "1px solid rgba(0,245,255,0.2)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "7px 12px", display: "flex", alignItems: "center", gap: 7 }}>
                 <span style={{ fontSize: 16 }}>{icon}</span>
                 <span style={{ fontSize: 11, fontWeight: 600, color: "#fff", fontFamily: "'Space Grotesk', sans-serif" }}>{label}</span>
@@ -308,10 +309,10 @@ function AboutSection() {
           <Reveal effect="fadeLeft" delay={100}>
           <div>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.9, fontSize: 15, marginBottom: "1.25rem", fontFamily: "'Space Grotesk', sans-serif" }}>
-              I'm a recently graduated specialist in Digital Infrastructure and Web Development from ISTA NTIC Beni Mellal. My passion lies at the intersection of robust networking systems and elegant web applications.
+              I'm a certified Full-Stack Web Developer in PHP/Laravel, also a graduate Specialized Technician in Digital Infrastructure (Systems & Networks) from ISTA NTIC Beni Mellal. I'm currently specializing further in PHP web development at ENAA — École Numérique Ahmed Al Hansali (2025–2026).
             </p>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.9, fontSize: 15, marginBottom: "1.5rem", fontFamily: "'Space Grotesk', sans-serif" }}>
-              With a solid foundation in TCP/IP networking, Windows Server, Linux administration, and PHP/Laravel development, I bridge the gap between infrastructure and application layers — delivering complete, secure digital solutions.
+              Motivated and rigorous, I bridge the gap between infrastructure and application layers: solid foundations in TCP/IP networking, Windows Server, Linux administration and virtualization, combined with hands-on PHP/Laravel and React development — delivering complete, secure digital solutions.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
               {[["📍", "Beni Mellal, Morocco"], ["📧", "hamadellahotman13@gmail.com"], ["📱", "+212 688082991"], ["🌐", "Arabic, French, English"]].map(([icon, text]) => (
@@ -324,10 +325,10 @@ function AboutSection() {
           </div>
           </Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            {[{ icon: "🌐", title: "Networking", desc: "CCNA certified with expertise in TCP/IP, VLAN, Routing & Switching", color: "#00f5ff" },
-              { icon: "🖥️", title: "Systems", desc: "Windows Server & Linux administration, VMware & Hyper-V virtualization", color: "#4f8ef7" },
-              { icon: "🔐", title: "Security", desc: "Firewall configuration, IDS/IPS concepts and network security", color: "#b855ff" },
-              { icon: "⚡", title: "Development", desc: "PHP/Laravel, HTML, CSS, JavaScript — full stack web apps", color: "#00ff88" },
+            {[{ icon: "⚡", title: "Back/Front-end", desc: "PHP, SQL, REST API on the back end; HTML, CSS, JavaScript, React on the front end", color: "#00ff88" },
+              { icon: "🧩", title: "Frameworks", desc: "Laravel, React, Flutter, Bootstrap, Tailwind CSS", color: "#b855ff" },
+              { icon: "🌐", title: "Networking", desc: "CCNA certified: TCP/IP configuration, IP addressing & subnetting, routing", color: "#00f5ff" },
+              { icon: "🖥️", title: "Systems", desc: "Windows Server, system administration, Linux, virtualization (VirtualBox / VMware)", color: "#4f8ef7" },
             ].map(({ icon, title, desc, color }, i) => (
               <Reveal key={title} effect="fadeIn" delay={150 + i * 100}>
               <GlassCard accentColor={color} style={{ padding: "1rem" }}>
@@ -345,10 +346,10 @@ function AboutSection() {
   );
 }
 const SKILLS = [
-  { cat: "Networking", color: "#00f5ff", icon: "🌐", items: [{ name: "TCP/IP", lvl: 90 }, { name: "VLAN", lvl: 85 }, { name: "Routing", lvl: 82 }, { name: "Switching", lvl: 80 }] },
-  { cat: "Systems", color: "#4f8ef7", icon: "🖥️", items: [{ name: "Windows Server", lvl: 85 }, { name: "Linux", lvl: 80 }, { name: "VMware", lvl: 75 }, { name: "Hyper-V", lvl: 72 }] },
-  { cat: "Security", color: "#b855ff", icon: "🔐", items: [{ name: "Firewalls", lvl: 80 }, { name: "IDS/IPS", lvl: 70 }, { name: "VPN", lvl: 72 }, { name: "Network Hardening", lvl: 75 }] },
-  { cat: "Development", color: "#00ff88", icon: "⚡", items: [{ name: "PHP", lvl: 85 }, { name: "Laravel", lvl: 82 }, { name: "JavaScript", lvl: 75 }, { name: "HTML/CSS", lvl: 90 }] },
+  { cat: "Front-end", color: "#00ff88", icon: "🎨", items: [{ name: "HTML/CSS", lvl: 90 }, { name: "JavaScript", lvl: 78 }, { name: "React", lvl: 75 }, { name: "Tailwind CSS", lvl: 72 }] },
+  { cat: "Back-end", color: "#00f5ff", icon: "⚙️", items: [{ name: "PHP", lvl: 85 }, { name: "Laravel", lvl: 82 }, { name: "SQL / MySQL", lvl: 80 }, { name: "REST API", lvl: 78 }] },
+  { cat: "Networking & Systems", color: "#4f8ef7", icon: "🌐", items: [{ name: "TCP/IP & Routing", lvl: 85 }, { name: "IP Addressing & Subnetting", lvl: 82 }, { name: "Windows Server", lvl: 78 }, { name: "Linux", lvl: 75 } ] },
+  { cat: "Design & Tools", color: "#b855ff", icon: "🛠️", items: [{ name: "Figma", lvl: 75 }, { name: "Lucidchart / StarUML", lvl: 78 }, { name: "Git / GitHub", lvl: 82 }, { name: "Jira / Trello", lvl: 75 }] },
 ];
 
 function SkillBar({ name, lvl, color }) {
@@ -396,7 +397,7 @@ function SkillsSection() {
         </div>
         <Reveal effect="fadeUp" delay={200}>
         <div style={{ marginTop: "2.5rem", display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "center" }}>
-          {["PHP", "Laravel", "HTML5", "CSS3", "JavaScript", "TCP/IP", "VLAN", "Windows Server", "Linux", "VMware", "Hyper-V", "Firewalls", "CCNAv7", "Git", "MySQL"].map(tag => (
+          {["PHP", "Laravel", "React", "Flutter", "Bootstrap", "Tailwind CSS", "HTML5", "CSS3", "JavaScript", "MySQL", "REST API", "TCP/IP", "Windows Server", "Linux", "VMware / VirtualBox", "Figma", "StarUML", "Git", "CCNAv7"].map(tag => (
             <span key={tag} style={{ padding: "5px 14px", borderRadius: 20, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", fontSize: 12, fontFamily: "'Space Grotesk', sans-serif", cursor: "default" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,245,255,0.1)"; e.currentTarget.style.borderColor = "rgba(0,245,255,0.3)"; e.currentTarget.style.color = COLORS.cyan; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>
@@ -412,24 +413,21 @@ function SkillsSection() {
 }
 
 const PROJECTS = [
-  { title: "Network Infrastructure", desc: "Enterprise-grade LAN/WAN architecture with VLANs, inter-VLAN routing, and Cisco hardware configuration.", tags: ["Cisco", "VLAN", "TCP/IP", "Switching"], color: "#00f5ff", emoji: "🌐" },
-  { title: "Laravel Web Application", desc: "Full-stack PHP/Laravel app with authentication, RESTful API, MySQL. MVC architecture with Blade templating.", tags: ["PHP", "Laravel", "MySQL", "Blade"], color: "#b855ff", emoji: "⚡" },
-  { title: "Windows Server Setup", desc: "Active Directory domain with Group Policy, DNS/DHCP services, user management, and remote desktop gateway.", tags: ["Windows Server", "AD", "DNS", "DHCP"], color: "#4f8ef7", emoji: "🖥️" },
-  { title: "Firewall Configuration", desc: "pfSense firewall with IDS/IPS rules, VPN tunnels, traffic shaping, and comprehensive security logging.", tags: ["pfSense", "Firewall", "VPN", "IDS"], color: "#00ff88", emoji: "🔐" },
-  { title: "Virtualization Lab", desc: "Multi-VM environment with VMware ESXi/Hyper-V. Snapshots, live migration, HA, and resource pooling.", tags: ["VMware", "Hyper-V", "ESXi", "VM"], color: "#ff6b6b", emoji: "☁️" },
-  { title: "Responsive Web Portfolio", desc: "Modern portfolio built with HTML5, CSS3, JavaScript. Smooth animations, dark mode, optimized performance.", tags: ["HTML5", "CSS3", "JavaScript"], color: "#ffd700", emoji: "🎨" },
+  { title: "EduSync — School Management System", desc: "Contributed to a school management platform. Owned the teacher module: student management, grades, absences and academic tracking.", tags: ["Laravel", "PHP", "MySQL", "HTML", "CSS", "JavaScript"], color: "#00f5ff", emoji: "🎓", href: "https://github.com/badrbelabrik/EduSync-School-Management-System.git" },
+  { title: "Sport Quiz App", desc: "Built a sports quiz app with React and an external API. Handled the front-end, API data handling, and interactive results display.", tags: ["React", "JavaScript", "HTML", "CSS", "REST API"], color: "#b855ff", emoji: "🏆", href: "https://github.com/outamghartAchraf/SportQuiz-Master-Le-D-fi-des-Athl-tes.git" },
 ];
 
 function ProjectCard({ project }) {
   const [hovered, setHovered] = useState(false);
   return (
+    <a href={project.href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ background: hovered ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)", border: `1px solid ${hovered ? project.color + "55" : "rgba(255,255,255,0.08)"}`, borderRadius: 16, overflow: "hidden", transition: "all 0.35s ease", transform: hovered ? "translateY(-6px)" : "translateY(0)", boxShadow: hovered ? `0 16px 50px ${project.color}22` : "none", cursor: "pointer" }}>
       <div style={{ height: 150, position: "relative", overflow: "hidden", background: `linear-gradient(135deg, ${project.color}22, ${project.color}08)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ fontSize: 60, opacity: hovered ? 1 : 0.7, transition: "all 0.3s", transform: hovered ? "scale(1.1)" : "scale(1)" }}>{project.emoji}</div>
         <div style={{ position: "absolute", inset: 0, background: hovered ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.25)", transition: "background 0.3s" }} />
         {hovered && (
           <div style={{ position: "absolute", bottom: 10, right: 10 }}>
-            <button style={{ background: project.color, color: "#000", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif" }}>View ↗</button>
+            <button style={{ background: project.color, color: "#000", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif" }}>View on GitHub ↗</button>
           </div>
         )}
       </div>
@@ -443,6 +441,7 @@ function ProjectCard({ project }) {
         </div>
       </div>
     </div>
+    </a>
   );
 }
 
@@ -471,8 +470,8 @@ function ProjectsSection() {
 function ExperienceSection() {
   const isMobile = useIsMobile();
   const items = [
-    { year: "2022–2024", title: "Technicien Spécialisé en Infrastructure Digitale", org: "ISTA NTIC Beni Mellal", desc: "Specialized diploma in digital infrastructure. Networking, sysadmin, cybersecurity, virtualization, and PHP/Laravel. CCNA certified.", color: COLORS.cyan, icon: "🎓" },
-    { year: "2022", title: "Baccalauréat en Sciences Physiques (Option Français)", org: "Lycée Taghzirt", desc: "High school diploma with a strong foundation in physics and sciences, taught in French.", color: COLORS.purple, icon: "📚" },
+    { year: "2025–2026", title: "Spécialisation Développement Web PHP", org: "ENAA — École Numérique Ahmed Al Hansali", desc: "Advanced specialization in PHP web development, deepening full-stack skills built during the ISTA program.", color: COLORS.cyan, icon: "💻" },
+    { year: "2022–2024", title: "Technicien Spécialisé en Infrastructures Digitales", org: "ISTA NTIC Beni Mellal — Option Systèmes et Réseaux", desc: "Specialized diploma in digital infrastructure: networking, system administration, virtualization, and PHP/Laravel web development.", color: COLORS.purple, icon: "🎓" },
     { year: "2023", title: "CCNAv7 – Introduction to Networks", org: "Cisco Networking Academy", desc: "OSI model, TCP/IP, basic routing and switching, IPv4/IPv6 addressing, and Ethernet technologies.", color: COLORS.blue, icon: "🌐" },
     { year: "2023", title: "CCNAv7 – Enterprise Networking, Security & Automation", org: "Cisco Networking Academy", desc: "OSPF, BGP, ACLs, VPNs, network security concepts, and automation fundamentals.", color: "#00ff88", icon: "🔒" },
   ];
@@ -540,12 +539,12 @@ function ExperienceSection() {
 }
 
 const SERVICES = [
-  { icon: "🌐", title: "Network Design", desc: "Full LAN/WAN architecture, VLAN setup, routing protocols, and network documentation.", color: "#00f5ff" },
-  { icon: "🖥️", title: "Server Admin", desc: "Windows Server & Linux setup, Active Directory, DNS/DHCP, and maintenance.", color: "#4f8ef7" },
-  { icon: "☁️", title: "Virtualization", desc: "VMware & Hyper-V setup, VM deployment, snapshots, HA, and optimization.", color: "#b855ff" },
-  { icon: "🔐", title: "Security Auditing", desc: "Firewall configuration, VPN tunnels, IDS/IPS deployment, and policy enforcement.", color: "#00ff88" },
-  { icon: "⚡", title: "Web Development", desc: "PHP/Laravel apps with clean code, MVC architecture, database design, and APIs.", color: "#ff6b6b" },
-  { icon: "📊", title: "IT Consulting", desc: "Infrastructure planning, tech evaluation, and digital transformation roadmaps.", color: "#ffd700" },
+  { icon: "⚡", title: "Web Development", desc: "PHP/Laravel and React apps with clean code, MVC architecture, database design, and REST APIs.", color: "#00ff88" },
+  { icon: "🌐", title: "Network Design", desc: "LAN/WAN architecture, IP addressing & subnetting, routing, and network documentation.", color: "#00f5ff" },
+  { icon: "🖥️", title: "Server Admin", desc: "Windows Server & Linux setup, system administration, and maintenance.", color: "#4f8ef7" },
+  { icon: "☁️", title: "Virtualization", desc: "VirtualBox & VMware setup, VM deployment and configuration.", color: "#b855ff" },
+  { icon: "📱", title: "Mobile & UI", desc: "Flutter app basics, UML modeling (Use Case, Class, ERD) with Figma, Lucidchart and StarUML.", color: "#ffd700" },
+  { icon: "📊", title: "IT Consulting", desc: "Infrastructure planning, tech evaluation, and digital transformation roadmaps.", color: "#ff6b6b" },
 ];
 
 function ServicesSection() {
@@ -635,7 +634,7 @@ function Footer() {
     <footer style={{ padding: "2.5rem 1.25rem", borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ fontSize: 26, fontWeight: 800, background: "linear-gradient(135deg, #00f5ff, #b855ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontFamily: "'Space Grotesk', sans-serif", marginBottom: "0.5rem" }}>OH.</div>
-        <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'Space Grotesk', sans-serif", marginBottom: "1.25rem" }}>Othmane Hamadellah — Infrastructure Engineer & Web Developer</p>
+        <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'Space Grotesk', sans-serif", marginBottom: "1.25rem" }}>Othmane Hamadellah — Full-Stack Web Developer & Infrastructure Technician</p>
         <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1.25rem" }}>
           {[["💼", "https://www.linkedin.com/in/othmane-hamadellah-83924b310"], ["🐙", "https://github.com/Hamadellah"], ["📧", "mailto:hamadellahotman13@gmail.com"], ["📱", "tel:+212688082991"]].map(([icon, href]) => (
             <a key={href} href={href} style={{ width: 38, height: 38, borderRadius: "50%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, textDecoration: "none" }}
@@ -645,7 +644,7 @@ function Footer() {
             </a>
           ))}
         </div>
-        <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 12, fontFamily: "'Space Grotesk', sans-serif" }}>© 2024 Othmane Hamadellah. Crafted with passion.</p>
+        <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 12, fontFamily: "'Space Grotesk', sans-serif" }}>© 2026 Othmane Hamadellah. Crafted with passion.</p>
       </div>
     </footer>
   );
