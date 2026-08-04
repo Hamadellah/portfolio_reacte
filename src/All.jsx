@@ -413,8 +413,38 @@ function SkillsSection() {
 }
 
 const PROJECTS = [
-  { title: "EduSync — School Management System", desc: "Contributed to a school management platform. Owned the teacher module: student management, grades, absences and academic tracking.", tags: ["Laravel", "PHP", "MySQL", "HTML", "CSS", "JavaScript"], color: "#00f5ff", emoji: "🎓", href: "https://github.com/badrbelabrik/EduSync-School-Management-System.git" },
-  { title: "Sport Quiz App", desc: "Built a sports quiz app with React and an external API. Handled the front-end, API data handling, and interactive results display.", tags: ["React", "JavaScript", "HTML", "CSS", "REST API"], color: "#b855ff", emoji: "🏆", href: "https://github.com/outamghartAchraf/SportQuiz-Master-Le-D-fi-des-Athl-tes.git" },
+  {
+    title: "PharmaFEFO — Pharmaceutical Stock Management",
+    desc: "Developed a pharmaceutical stock management application based on the FEFO (First Expired, First Out) method. The system manages medicine batches, expiration dates, stock entries and exits, expiry alerts, returns, and expired-product loss tracking.",
+    tags: ["PHP", "MySQL", "PDO", "MVC", "Bootstrap"],
+    color: "#00f5ff",
+    emoji: "💊",
+    href: "https://github.com/Hamadellah/parmaciefefo.git"
+  },
+  {
+    title: "BDE Events — Student Event Management",
+    desc: "Built a student event management platform with role-based access. Administrators can create events and monitor remaining capacity, while students can reserve a seat and receive a unique digital reservation ticket.",
+    tags: ["Laravel", "PHP", "MySQL", "Blade", "Tailwind CSS"],
+    color: "#b855ff",
+    emoji: "🎟️",
+    href: "https://github.com/Hamadellah/BDE-Events.git"
+  },
+  {
+    title: "LinkUp — Professional Social Network",
+    desc: "Developed a professional social networking platform with secure authentication, user profiles, posts, likes, comments, follow/unfollow, reposts, and saved posts. Implemented Laravel Eloquent relationships, Form Requests, middleware, and Policies for access control.",
+    tags: ["Laravel", "PHP", "MySQL", "Blade", "Tailwind CSS", "REST API"],
+    color: "#ff4d8d",
+    emoji: "🌐",
+    href: "https://github.com/Hamadellah/linkUP.git"
+  },
+  {
+title: "EduQuiz — Academic Management Platform",
+desc: "Contributed to a team-based academic management platform featuring dedicated dashboards for administrators, teachers, and students. The application manages users, classes, courses, enrollments, academic progress, and role-based access.",
+tags: ["Laravel", "PHP", "MySQL", "Blade", "Bootstrap"],
+color: "#39d98a",
+emoji: "📚",
+href: "https://github.com/Ihsane-benmouina/EduQuiz-Application-de-Quiz.git"
+},
 ];
 
 function ProjectCard({ project }) {
