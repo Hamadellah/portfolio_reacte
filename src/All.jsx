@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import myImage from './othmane12.webp';
+import bgPhoto from './othmane-photo.jpg';
 const COLORS = {
   cyan: "#00f5ff",
   purple: "#b855ff",
@@ -103,53 +104,124 @@ function SectionDivider({ color1 = "#00f5ff", color2 = "#b855ff" }) {
   );
 }
 
-function Particles() {
+// Fixed, full-page photo backdrop: Othmane's real portrait, converted to a
+// cyan/violet duotone so it reads as "coding-web" rather than a plain photo,
+// with a slow Ken-Burns drift, a moving aurora wash, and a subtle mouse
+// parallax on desktop. A dark gradient keeps every section readable on top.
+function PhotoBackground() {
+  const isMobile = useIsMobile();
+  const wrapRef = useRef(null);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (isMobile) return;
+    const wrap = wrapRef.current;
+    const img = imgRef.current;
+    if (!wrap || !img) return;
+    let raf = null;
+    const onMove = (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+        img.style.setProperty("--px", `${nx * -14}px`);
+        img.style.setProperty("--py", `${ny * -14}px`);
+        raf = null;
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => { window.removeEventListener("mousemove", onMove); if (raf) cancelAnimationFrame(raf); };
+  }, [isMobile]);
+
+  return (
+    <div ref={wrapRef} style={{ position: "fixed", inset: 0, zIndex: -3, overflow: "hidden", background: COLORS.dark }}>
+      {/* Duotone portrait: grayscale first, then a cyan->violet gradient map via mix-blend-mode */}
+      <div style={{ position: "absolute", top: "50%", left: "50%", width: "120%", height: "120%", transform: "translate(-50%, -50%)" }}>
+        <img
+          ref={imgRef}
+          src={bgPhoto}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center 18%",
+            filter: "grayscale(100%) contrast(1.15) brightness(0.95)",
+            transform: "translate(var(--px, 0px), var(--py, 0px)) scale(1)",
+            transition: "transform 0.4s ease-out",
+            animation: "kenburns 26s ease-in-out infinite alternate",
+          }}
+        />
+        {/* Colorizes the grayscale portrait into the site's cyan/violet duotone */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #00f5ff 0%, #0a0a1a 45%, #b855ff 100%)", mixBlendMode: "color", opacity: 0.9 }} />
+        <div style={{ position: "absolute", inset: 0, background: "#050510", mixBlendMode: "multiply", opacity: 0.35 }} />
+      </div>
+
+      {/* Aurora wash: slow-drifting colored blobs for a lively, "very nice" animated feel */}
+      <div style={{ position: "absolute", inset: "-10%", mixBlendMode: "screen", opacity: 0.55, filter: "blur(60px)", animation: "aurora1 18s ease-in-out infinite" }}>
+        <div style={{ position: "absolute", width: "55%", height: "55%", top: "5%", left: "0%", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,245,255,0.55), transparent 70%)" }} />
+      </div>
+      <div style={{ position: "absolute", inset: "-10%", mixBlendMode: "screen", opacity: 0.5, filter: "blur(70px)", animation: "aurora2 22s ease-in-out infinite" }}>
+        <div style={{ position: "absolute", width: "60%", height: "60%", bottom: "0%", right: "0%", borderRadius: "50%", background: "radial-gradient(circle, rgba(184,85,255,0.55), transparent 70%)" }} />
+      </div>
+
+      {/* Scanline texture ties the photo to the "code" motif */}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px)", mixBlendMode: "multiply", opacity: 0.45 }} />
+
+      {/* Radial vignette + brand gradient wash for legibility */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 35%, rgba(5,5,16,0.5) 0%, rgba(5,5,16,0.86) 55%, rgba(5,5,16,0.97) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,5,16,0.35) 0%, rgba(5,5,16,0.72) 40%, rgba(5,5,16,0.95) 100%)" }} />
+    </div>
+  );
+}
+
+// Matrix-style "code rain": columns of real snippets from Othmane's stack
+// (PHP/Laravel/React/TCP-IP tokens) drifting down over the photo backdrop.
+function CodeRain() {
   const canvasRef = useRef(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const count = window.innerWidth < 768 ? 40 : 80;
-    const particles = Array.from({ length: count }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      r: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.5 + 0.1,
-      color: Math.random() > 0.5 ? "#00f5ff" : "#b855ff",
-    }));
+    const isMobile = window.innerWidth < 768;
+    const fontSize = isMobile ? 13 : 15;
+    const glyphs = "01{}<>/;=+-*[]()$#PHPSQLREACTAPITCPIPGITLARAVEL".split("");
+
+    let cols = 0;
+    let drops = [];
+    const setup = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols = Math.floor(canvas.width / (fontSize * 1.4));
+      drops = Array.from({ length: cols }, () => Math.random() * -canvas.height / fontSize);
+    };
+    setup();
+
     let animId;
     function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color; ctx.globalAlpha = p.opacity; ctx.fill();
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      });
-      particles.forEach((p, i) => {
-        particles.slice(i + 1).forEach(q => {
-          const d = Math.hypot(p.x - q.x, p.y - q.y);
-          if (d < 100) {
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = "#4f8ef7"; ctx.globalAlpha = (1 - d / 100) * 0.1;
-            ctx.lineWidth = 0.5; ctx.stroke();
-          }
-        });
-      });
-      ctx.globalAlpha = 1;
+      ctx.fillStyle = "rgba(5,5,16,0.12)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `${fontSize}px 'Space Grotesk', monospace`;
+      for (let i = 0; i < cols; i++) {
+        const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+        const x = i * fontSize * 1.4;
+        const y = drops[i] * fontSize;
+        const isHead = Math.random() > 0.94;
+        ctx.fillStyle = isHead ? "#ffffff" : (i % 2 === 0 ? "rgba(0,245,255,0.55)" : "rgba(184,85,255,0.5)");
+        ctx.fillText(glyph, x, y);
+        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.35;
+      }
       animId = requestAnimationFrame(draw);
     }
     draw();
-    const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    window.addEventListener("resize", onResize);
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", onResize); };
+    window.addEventListener("resize", setup);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", setup); };
   }, []);
-  return <canvas ref={canvasRef} style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", pointerEvents: "none", zIndex: 0 }} />;
+  return <canvas ref={canvasRef} style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", pointerEvents: "none", zIndex: -1, opacity: 0.35 }} />;
 }
 
 function GlowOrb({ x, y, color, size = 300 }) {
@@ -710,7 +782,7 @@ export default function Portfolio() {
   if (!loaded) return <Loader onDone={() => setLoaded(true)} />;
 
   return (
-    <div style={{ background: "#050510", minHeight: "100vh", color: "#fff", position: "relative", overflowX: "hidden" }}>
+    <div style={{ background: "transparent", minHeight: "100vh", color: "#fff", position: "relative", overflowX: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -722,10 +794,17 @@ export default function Portfolio() {
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.9)} }
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes kenburns { 0%{transform:translate(var(--px,0px),var(--py,0px)) scale(1.03)} 100%{transform:translate(var(--px,0px),var(--py,0px)) scale(1.14)} }
+        @keyframes aurora1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(12%,8%)} }
+        @keyframes aurora2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-10%,-10%)} }
         @media (min-width: 769px) { #hamburger-btn { display: none !important; } }
         @media (max-width: 768px) { #desktop-nav { display: none !important; } #hamburger-btn { display: flex !important; } }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
       `}</style>
-      <Particles />
+      <PhotoBackground />
+      <CodeRain />
       <Navbar active={active} />
       <HeroSection />
       <AboutSection />
