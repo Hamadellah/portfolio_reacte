@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import myImage from './othmane12.webp';
 import bgPhoto from './othmane-photo.jpg';
+import bgVideo from './othmane-bg.mp4';
+import cvFile from './othmane-cv.pdf';
 const COLORS = {
   cyan: "#00f5ff",
   purple: "#b855ff",
@@ -108,72 +110,179 @@ function SectionDivider({ color1 = "#00f5ff", color2 = "#b855ff" }) {
 // cyan/violet duotone so it reads as "coding-web" rather than a plain photo,
 // with a slow Ken-Burns drift, a moving aurora wash, and a subtle mouse
 // parallax on desktop. A dark gradient keeps every section readable on top.
-function PhotoBackground() {
+
+function VideoBackground() {
   const isMobile = useIsMobile();
   const wrapRef = useRef(null);
-  const imgRef = useRef(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     if (isMobile) return;
+
     const wrap = wrapRef.current;
-    const img = imgRef.current;
-    if (!wrap || !img) return;
+    const video = videoRef.current;
+
+    if (!wrap || !video) return;
+
     let raf = null;
+
     const onMove = (e) => {
       if (raf) return;
+
       raf = requestAnimationFrame(() => {
         const nx = (e.clientX / window.innerWidth - 0.5) * 2;
         const ny = (e.clientY / window.innerHeight - 0.5) * 2;
-        img.style.setProperty("--px", `${nx * -14}px`);
-        img.style.setProperty("--py", `${ny * -14}px`);
+
+        // Mouvement léger باش مايبعدش الوجه بزاف
+        video.style.setProperty("--px", `${nx * -3}px`);
+        video.style.setProperty("--py", `${ny * -3}px`);
+
         raf = null;
       });
     };
+
     window.addEventListener("mousemove", onMove);
-    return () => { window.removeEventListener("mousemove", onMove); if (raf) cancelAnimationFrame(raf); };
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+
+      if (raf) {
+        cancelAnimationFrame(raf);
+      }
+    };
   }, [isMobile]);
 
   return (
-    <div ref={wrapRef} style={{ position: "fixed", inset: 0, zIndex: -3, overflow: "hidden", background: COLORS.dark }}>
-      {/* Duotone portrait: grayscale first, then a cyan->violet gradient map via mix-blend-mode */}
-      <div style={{ position: "absolute", top: "50%", left: "50%", width: "120%", height: "120%", transform: "translate(-50%, -50%)" }}>
-        <img
-          ref={imgRef}
-          src={bgPhoto}
-          alt=""
-          aria-hidden="true"
+    <div
+      ref={wrapRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: -3,
+        overflow: "hidden",
+        background: "#050510",
+      }}
+    >
+      {/* VIDEO BACKGROUND */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          overflow: "hidden",
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={bgVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
           style={{
             position: "absolute",
-            inset: 0,
+            top: "50%",
+            left: "50%",
+
             width: "100%",
             height: "100%",
+
             objectFit: "cover",
-            objectPosition: "center 18%",
-            filter: "grayscale(100%) contrast(1.15) brightness(0.95)",
-            transform: "translate(var(--px, 0px), var(--py, 0px)) scale(1)",
+
+            // مركز الفيديو
+            objectPosition: "center center",
+
+            // Zoom متوسط
+            transform:
+              "translate(-50%, -50%) translate(var(--px, 0px), var(--py, 0px)) scale(0.92)",
+
+            filter:
+              "brightness(0.65) contrast(1.05) saturate(1.05)",
+
             transition: "transform 0.4s ease-out",
-            animation: "kenburns 26s ease-in-out infinite alternate",
           }}
         />
-        {/* Colorizes the grayscale portrait into the site's cyan/violet duotone */}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #00f5ff 0%, #0a0a1a 45%, #b855ff 100%)", mixBlendMode: "color", opacity: 0.9 }} />
-        <div style={{ position: "absolute", inset: 0, background: "#050510", mixBlendMode: "multiply", opacity: 0.35 }} />
       </div>
 
-      {/* Aurora wash: slow-drifting colored blobs for a lively, "very nice" animated feel */}
-      <div style={{ position: "absolute", inset: "-10%", mixBlendMode: "screen", opacity: 0.55, filter: "blur(60px)", animation: "aurora1 18s ease-in-out infinite" }}>
-        <div style={{ position: "absolute", width: "55%", height: "55%", top: "5%", left: "0%", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,245,255,0.55), transparent 70%)" }} />
-      </div>
-      <div style={{ position: "absolute", inset: "-10%", mixBlendMode: "screen", opacity: 0.5, filter: "blur(70px)", animation: "aurora2 22s ease-in-out infinite" }}>
-        <div style={{ position: "absolute", width: "60%", height: "60%", bottom: "0%", right: "0%", borderRadius: "50%", background: "radial-gradient(circle, rgba(184,85,255,0.55), transparent 70%)" }} />
-      </div>
+      {/* CYAN / PURPLE OVERLAY */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(135deg, rgba(0,245,255,0.12), rgba(5,5,16,0.15) 45%, rgba(184,85,255,0.12))",
+          mixBlendMode: "screen",
+          pointerEvents: "none",
+        }}
+      />
 
-      {/* Scanline texture ties the photo to the "code" motif */}
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px)", mixBlendMode: "multiply", opacity: 0.45 }} />
+      {/* DARK OVERLAY */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(180deg, rgba(5,5,16,0.25) 0%, rgba(5,5,16,0.55) 50%, rgba(5,5,16,0.92) 100%)",
+          pointerEvents: "none",
+        }}
+      />
 
-      {/* Radial vignette + brand gradient wash for legibility */}
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 35%, rgba(5,5,16,0.5) 0%, rgba(5,5,16,0.86) 55%, rgba(5,5,16,0.97) 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,5,16,0.35) 0%, rgba(5,5,16,0.72) 40%, rgba(5,5,16,0.95) 100%)" }} />
+      {/* RADIAL VIGNETTE */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse at center, transparent 0%, rgba(5,5,16,0.25) 60%, rgba(5,5,16,0.8) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* SCANLINES */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 4px)",
+          opacity: 0.3,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* CYAN GLOW */}
+      <div
+        style={{
+          position: "absolute",
+          width: "40vw",
+          height: "40vw",
+          top: "-10%",
+          left: "-10%",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,245,255,0.15), transparent 70%)",
+          filter: "blur(70px)",
+          pointerEvents: "none",
+          animation: "aurora1 15s ease-in-out infinite",
+        }}
+      />
+
+      {/* PURPLE GLOW */}
+      <div
+        style={{
+          position: "absolute",
+          width: "40vw",
+          height: "40vw",
+          bottom: "-10%",
+          right: "-10%",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(184,85,255,0.15), transparent 70%)",
+          filter: "blur(80px)",
+          pointerEvents: "none",
+          animation: "aurora2 18s ease-in-out infinite",
+        }}
+      />
     </div>
   );
 }
@@ -249,6 +358,7 @@ function Navbar({ active }) {
           {NAV_ITEMS.map(item => (
             <button key={item} onClick={() => scrollTo(item)} style={{ background: "none", border: "none", cursor: "pointer", color: active === item.toLowerCase() ? COLORS.cyan : "rgba(255,255,255,0.6)", fontFamily: "'Space Grotesk', sans-serif", fontSize: 14, fontWeight: 500, transition: "color 0.2s", borderBottom: active === item.toLowerCase() ? `2px solid ${COLORS.cyan}` : "2px solid transparent", paddingBottom: 2 }}>{item}</button>
           ))}
+          <a href={cvFile} download="Othmane_Hamadellah_CV.pdf" style={{ background: "transparent", color: COLORS.cyan, border: `1px solid ${COLORS.cyan}`, padding: "8px 18px", borderRadius: 6, fontSize: 13, fontWeight: 600, textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif", whiteSpace: "nowrap" }}>Download CV</a>
           <a href="mailto:hamadellahotman13@gmail.com" style={{ background: "linear-gradient(135deg, #00f5ff, #4f8ef7)", color: "#000", padding: "8px 20px", borderRadius: 6, fontSize: 13, fontWeight: 600, textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif", whiteSpace: "nowrap" }}>Hire Me</a>
         </div>
         {/* Hamburger */}
@@ -262,7 +372,8 @@ function Navbar({ active }) {
           {NAV_ITEMS.map(item => (
             <button key={item} onClick={() => scrollTo(item)} style={{ display: "block", width: "100%", textAlign: "left", background: "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", color: active === item.toLowerCase() ? COLORS.cyan : "rgba(255,255,255,0.8)", fontFamily: "'Space Grotesk', sans-serif", fontSize: 16, padding: "14px 0" }}>{item}</button>
           ))}
-          <a href="mailto:hamadellahotman13@gmail.com" style={{ display: "block", marginTop: "1rem", background: "linear-gradient(135deg, #00f5ff, #4f8ef7)", color: "#000", padding: "12px", borderRadius: 8, textAlign: "center", fontWeight: 700, textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif" }}>Hire Me</a>
+          <a href={cvFile} download="Othmane_Hamadellah_CV.pdf" style={{ display: "block", marginTop: "1rem", background: "transparent", color: COLORS.cyan, border: `1px solid ${COLORS.cyan}`, padding: "12px", borderRadius: 8, textAlign: "center", fontWeight: 700, textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif" }}>Download CV</a>
+          <a href="mailto:hamadellahotman13@gmail.com" style={{ display: "block", marginTop: "0.75rem", background: "linear-gradient(135deg, #00f5ff, #4f8ef7)", color: "#000", padding: "12px", borderRadius: 8, textAlign: "center", fontWeight: 700, textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif" }}>Hire Me</a>
         </div>
       )}
     </nav>
@@ -291,7 +402,7 @@ function SectionHeader({ tag, title, center = false }) {
 }
 
 function HeroSection() {
-  const typed = useTypingEffect(["Full-Stack Web Developer", "PHP/Laravel Developer", "React Developer", "Network & Systems Specialist", "Problem Solver"]);
+  const typed = useTypingEffect(["Full-Stack Web Developer", "PHP/Laravel Developer", "React Developer", "REST API Developer", "Laravel & React Developer"]);
   const isMobile = useIsMobile();
   return (
     <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: isMobile ? "80px 1.25rem 3rem" : "0 2rem" }}>
@@ -320,18 +431,19 @@ function HeroSection() {
           </Reveal>
           <Reveal effect="fadeLeft" delay={440}>
           <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.8, maxWidth: 480, marginBottom: "2rem", fontSize: 15, fontFamily: "'Space Grotesk', sans-serif" }}>
-            Full-stack web developer certified in PHP/Laravel, also trained as a Digital Infrastructure Technician (Systems & Networks). I build complete, secure digital solutions — from the network layer up to the application layer.
+            Full-Stack Web Developer specialized in PHP/Laravel and React, building secure REST APIs and MySQL-backed applications with Docker — backed by a Digital Infrastructure, Systems & Networks foundation.
           </p>
           </Reveal>
           <Reveal effect="fadeUp" delay={560}>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
             <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "linear-gradient(135deg, #00f5ff, #4f8ef7)", color: "#000", padding: "12px 24px", borderRadius: 8, border: "none", cursor: "pointer", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 14 }}>View Projects →</button>
             <a href="mailto:hamadellahotman13@gmail.com" style={{ background: "transparent", color: COLORS.cyan, padding: "12px 24px", borderRadius: 8, border: `1px solid ${COLORS.cyan}`, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", fontSize: 14, textDecoration: "none", display: "inline-block" }}>Get In Touch</a>
+            <a href={cvFile} download="Othmane_Hamadellah_CV.pdf" style={{ background: "rgba(255,255,255,0.05)", color: "#fff", padding: "12px 24px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", fontSize: 14, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>📄 Download CV</a>
           </div>
           </Reveal>
           <Reveal effect="fadeUp" delay={700}>
           <div style={{ display: "flex", gap: "1.5rem", marginTop: "2.5rem" }}>
-            {[["2", "Featured Projects"], ["2", "CCNA Certs"], ["FR/EN/AR", "Languages"]].map(([n, l]) => (
+            {[["4", "Featured Projects"], ["2", "CCNA Certs"], ["FR/EN/AR", "Languages"]].map(([n, l]) => (
               <div key={l}>
                 <div style={{ fontSize: 26, fontWeight: 800, background: "linear-gradient(135deg, #00f5ff, #b855ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontFamily: "'Space Grotesk', sans-serif" }}>{n}</div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'Space Grotesk', sans-serif" }}>{l}</div>
@@ -354,7 +466,7 @@ function HeroSection() {
 />
               </div>
             </div>
-            {!isMobile && [{ top: "5%", right: "0%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "-5%", label: "React", icon: "⚛️" }, { top: "40%", right: "-8%", label: "CCNA", icon: "🌐" }].map(({ top, right, bottom, left, label, icon }) => (
+            {!isMobile && [{ top: "5%", right: "0%", label: "Laravel", icon: "⚡" }, { bottom: "10%", left: "-5%", label: "React", icon: "⚛️" }, { top: "40%", right: "-8%", label: "REST API", icon: "🔌" }].map(({ top, right, bottom, left, label, icon }) => (
               <div key={label} style={{ position: "absolute", top, right, bottom, left, background: "rgba(10,10,26,0.9)", border: "1px solid rgba(0,245,255,0.2)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "7px 12px", display: "flex", alignItems: "center", gap: 7 }}>
                 <span style={{ fontSize: 16 }}>{icon}</span>
                 <span style={{ fontSize: 11, fontWeight: 600, color: "#fff", fontFamily: "'Space Grotesk', sans-serif" }}>{label}</span>
@@ -381,10 +493,10 @@ function AboutSection() {
           <Reveal effect="fadeLeft" delay={100}>
           <div>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.9, fontSize: 15, marginBottom: "1.25rem", fontFamily: "'Space Grotesk', sans-serif" }}>
-              I'm a certified Full-Stack Web Developer in PHP/Laravel, also a graduate Specialized Technician in Digital Infrastructure (Systems & Networks) from ISTA NTIC Beni Mellal. I'm currently specializing further in PHP web development at ENAA — École Numérique Ahmed Al Hansali (2025–2026).
+              Full-Stack Web Developer specialized in PHP/Laravel and React, with a background in Digital Infrastructure, Systems and Networks. I build secure, scalable and user-focused web applications, from REST APIs and authentication to modern responsive interfaces.
             </p>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.9, fontSize: 15, marginBottom: "1.5rem", fontFamily: "'Space Grotesk', sans-serif" }}>
-              Motivated and rigorous, I bridge the gap between infrastructure and application layers: solid foundations in TCP/IP networking, Windows Server, Linux administration and virtualization, combined with hands-on PHP/Laravel and React development — delivering complete, secure digital solutions.
+              Motivated and rigorous, I combine backend development, frontend integration and infrastructure knowledge to build complete digital solutions.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
               {[["📍", "Beni Mellal, Morocco"], ["📧", "hamadellahotman13@gmail.com"], ["📱", "+212 688082991"], ["🌐", "Arabic, French, English"]].map(([icon, text]) => (
@@ -397,10 +509,10 @@ function AboutSection() {
           </div>
           </Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            {[{ icon: "⚡", title: "Back/Front-end", desc: "PHP, SQL, REST API on the back end; HTML, CSS, JavaScript, React on the front end", color: "#00ff88" },
-              { icon: "🧩", title: "Frameworks", desc: "Laravel, React, Flutter, Bootstrap, Tailwind CSS", color: "#b855ff" },
+            {[{ icon: "⚡", title: "Full-Stack Dev", desc: "PHP, Laravel, REST API on the back end; React, JavaScript on the front end", color: "#00ff88" },
+              { icon: "🧩", title: "Frameworks", desc: "Laravel, React, Bootstrap, Tailwind CSS", color: "#b855ff" },
               { icon: "🌐", title: "Networking", desc: "CCNA certified: TCP/IP configuration, IP addressing & subnetting, routing", color: "#00f5ff" },
-              { icon: "🖥️", title: "Systems", desc: "Windows Server, system administration, Linux, virtualization (VirtualBox / VMware)", color: "#4f8ef7" },
+              { icon: "🖥️", title: "Systems", desc: "Windows Server, Linux administration, virtualization (VirtualBox / VMware)", color: "#4f8ef7" },
             ].map(({ icon, title, desc, color }, i) => (
               <Reveal key={title} effect="fadeIn" delay={150 + i * 100}>
               <GlassCard accentColor={color} style={{ padding: "1rem" }}>
@@ -417,69 +529,89 @@ function AboutSection() {
     </>
   );
 }
-const SKILLS = [
-  { cat: "Front-end", color: "#00ff88", icon: "🎨", items: [{ name: "HTML/CSS", lvl: 90 }, { name: "JavaScript", lvl: 78 }, { name: "React", lvl: 75 }, { name: "Tailwind CSS", lvl: 72 }] },
-  { cat: "Back-end", color: "#00f5ff", icon: "⚙️", items: [{ name: "PHP", lvl: 85 }, { name: "Laravel", lvl: 82 }, { name: "SQL / MySQL", lvl: 80 }, { name: "REST API", lvl: 78 }] },
-  { cat: "Networking & Systems", color: "#4f8ef7", icon: "🌐", items: [{ name: "TCP/IP & Routing", lvl: 85 }, { name: "IP Addressing & Subnetting", lvl: 82 }, { name: "Windows Server", lvl: 78 }, { name: "Linux", lvl: 75 } ] },
-  { cat: "Design & Tools", color: "#b855ff", icon: "🛠️", items: [{ name: "Figma", lvl: 75 }, { name: "Lucidchart / StarUML", lvl: 78 }, { name: "Git / GitHub", lvl: 82 }, { name: "Jira / Trello", lvl: 75 }] },
+
+const WHAT_I_BUILD = [
+  { icon: "⚡", label: "Full-Stack Web Applications", color: "#00ff88" },
+  { icon: "🔐", label: "Secure REST APIs & Authentication", color: "#00f5ff" },
+  { icon: "📊", label: "Admin Dashboards", color: "#4f8ef7" },
+  { icon: "🎟️", label: "Event & Reservation Systems", color: "#b855ff" },
+  { icon: "🌐", label: "Responsive React Interfaces", color: "#ff4d8d" },
+  { icon: "🐳", label: "Dockerized Applications", color: "#ffd700" },
 ];
 
-function SkillBar({ name, lvl, color }) {
-  const [animated, setAnimated] = useState(false);
-  const ref = useRef(null);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setAnimated(true); }, { threshold: 0.2 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
+function WhatIBuildSection() {
+  const isMobile = useIsMobile();
   return (
-    <div ref={ref} style={{ marginBottom: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-        <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontFamily: "'Space Grotesk', sans-serif" }}>{name}</span>
-        <span style={{ fontSize: 12, color, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 }}>{lvl}%</span>
+    <>
+    <SectionDivider color1="#00f5ff" color2="#b855ff" />
+    <section id="what-i-build" style={{ padding: isMobile ? "60px 1.25rem" : "80px 2rem", position: "relative" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <SectionHeader tag="What I Build" title="Building Blocks" center />
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+          {WHAT_I_BUILD.map((item, i) => (
+            <Reveal key={item.label} effect="fadeIn" delay={i * 80}>
+              <GlassCard accentColor={item.color} style={{ textAlign: "center", padding: "1.25rem 1rem" }}>
+                <div style={{ fontSize: 30, marginBottom: 8 }}>{item.icon}</div>
+                <div style={{ fontSize: 13, color: "#fff", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", lineHeight: 1.4 }}>{item.label}</div>
+              </GlassCard>
+            </Reveal>
+          ))}
+        </div>
       </div>
-      <div style={{ height: 5, background: "rgba(255,255,255,0.06)", borderRadius: 3, overflow: "hidden" }}>
-        <div style={{ height: "100%", borderRadius: 3, background: `linear-gradient(90deg, ${color}, ${color}88)`, width: animated ? `${lvl}%` : "0%", transition: "width 1.2s cubic-bezier(0.4,0,0.2,1)", boxShadow: `0 0 6px ${color}66` }} />
-      </div>
-    </div>
+    </section>
+    </>
   );
 }
+
+const SKILLS = [
+  { cat: "Frontend", color: "#00ff88", icon: "🎨", items: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Bootstrap"] },
+  { cat: "Backend", color: "#00f5ff", icon: "⚙️", items: ["PHP", "Laravel", "REST API", "MVC", "Authentication"] },
+  { cat: "Database", color: "#4f8ef7", icon: "🗄️", items: ["MySQL", "SQLite", "Firebase"] },
+  { cat: "DevOps & Tools", color: "#b855ff", icon: "🛠️", items: ["Docker", "Git", "GitHub", "Postman", "VS Code"] },
+  { cat: "Infrastructure", color: "#ffd700", icon: "🌐", items: ["Linux", "Windows Server", "TCP/IP", "Virtualization"] },
+];
 
 function SkillsSection() {
   const isMobile = useIsMobile();
   return (
     <>
-    <SectionDivider color1="#b855ff" color2="#00f5ff" />
-    <section id="skills" style={{ padding: isMobile ? "70px 1.25rem" : "100px 2rem", position: "relative" }}>
-      <GlowOrb x="-5%" y="30%" color={COLORS.purple} size={300} />
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <SectionHeader tag="02. Skills" title="Technical Arsenal" center />
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
-          {SKILLS.map(({ cat, color, icon, items }, i) => (
-            <Reveal key={cat} effect="slideUp" delay={i * 120}>
-            <GlassCard accentColor={color}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1.25rem" }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: `${color}22`, border: `1px solid ${color}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{icon}</div>
-                <h3 style={{ color: "#fff", fontSize: 16, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }}>{cat}</h3>
-              </div>
-              {items.map(({ name, lvl }) => <SkillBar key={name} name={name} lvl={lvl} color={color} />)}
-            </GlassCard>
-            </Reveal>
-          ))}
+      <SectionDivider color1="#b855ff" color2="#00f5ff" />
+      <section id="skills" style={{ padding: isMobile ? "70px 1.25rem" : "100px 2rem", position: "relative" }}>
+        <GlowOrb x="-5%" y="30%" color={COLORS.purple} size={300} />
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <SectionHeader tag="02. Skills" title="Technical Arsenal" center />
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.25rem" }}>
+            {SKILLS.map(({ cat, color, icon, items }, i) => (
+              <Reveal key={cat} effect="slideUp" delay={i * 120}>
+                <GlassCard accentColor={color}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1.25rem" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: `${color}22`, border: `1px solid ${color}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{icon}</div>
+                    <h3 style={{ color: "#fff", fontSize: 16, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }}>{cat}</h3>
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                    {items.map((name) => (
+                      <span key={name} style={{ padding: "4px 10px", borderRadius: 8, background: `${color}15`, border: `1px solid ${color}33`, color: "#fff", fontSize: 13, fontFamily: "'Space Grotesk', sans-serif" }}>
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                </GlassCard>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal effect="fadeUp" delay={200}>
+            <div style={{ marginTop: "2.5rem", display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "center" }}>
+              {["React", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Bootstrap", "PHP", "Laravel", "REST API", "MVC", "Authentication", "MySQL", "SQLite", "Firebase", "Docker", "Git", "GitHub", "Postman", "VS Code", "Linux", "Windows Server", "TCP/IP", "Virtualization"].map(tag => (
+                <span key={tag} style={{ padding: "5px 14px", borderRadius: 20, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", fontSize: 12, fontFamily: "'Space Grotesk', sans-serif", cursor: "default" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,245,255,0.1)"; e.currentTarget.style.borderColor = "rgba(0,245,255,0.3)"; e.currentTarget.style.color = COLORS.cyan; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </Reveal>
         </div>
-        <Reveal effect="fadeUp" delay={200}>
-        <div style={{ marginTop: "2.5rem", display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "center" }}>
-          {["PHP", "Laravel", "React", "Flutter", "Bootstrap", "Tailwind CSS", "HTML5", "CSS3", "JavaScript", "MySQL", "REST API", "TCP/IP", "Windows Server", "Linux", "VMware / VirtualBox", "Figma", "StarUML", "Git", "CCNAv7"].map(tag => (
-            <span key={tag} style={{ padding: "5px 14px", borderRadius: 20, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", fontSize: 12, fontFamily: "'Space Grotesk', sans-serif", cursor: "default" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,245,255,0.1)"; e.currentTarget.style.borderColor = "rgba(0,245,255,0.3)"; e.currentTarget.style.color = COLORS.cyan; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-        </Reveal>
-      </div>
-    </section>
+      </section>
     </>
   );
 }
@@ -491,15 +623,17 @@ const PROJECTS = [
     tags: ["PHP", "MySQL", "PDO", "MVC", "Bootstrap"],
     color: "#00f5ff",
     emoji: "💊",
-    href: "https://github.com/Hamadellah/parmaciefefo.git"
+    href: "https://github.com/Hamadellah/parmaciefefo.git",
+    demo: null
   },
   {
     title: "BDE Events — Student Event Management",
-    desc: "Built a student event management platform with role-based access. Administrators can create events and monitor remaining capacity, while students can reserve a seat and receive a unique digital reservation ticket.",
-    tags: ["Laravel", "PHP", "MySQL", "Blade", "Tailwind CSS"],
+    desc: "Full-stack student event management platform built with a Laravel REST API and React. Includes authentication, role-based access control, event management, reservations, capacity tracking and digital reservation tickets.",
+    tags: ["Laravel", "PHP", "React", "MySQL", "REST API", "Sanctum", "Docker"],
     color: "#b855ff",
     emoji: "🎟️",
-    href: "https://github.com/Hamadellah/BDE-Events.git"
+    href: "https://github.com/Hamadellah/BDE-Events.git",
+    demo: null
   },
   {
     title: "LinkUp — Professional Social Network",
@@ -507,43 +641,44 @@ const PROJECTS = [
     tags: ["Laravel", "PHP", "MySQL", "Blade", "Tailwind CSS", "REST API"],
     color: "#ff4d8d",
     emoji: "🌐",
-    href: "https://github.com/Hamadellah/linkUP.git"
+    href: "https://github.com/Hamadellah/linkUP.git",
+    demo: null
   },
   {
-title: "EduQuiz — Academic Management Platform",
-desc: "Contributed to a team-based academic management platform featuring dedicated dashboards for administrators, teachers, and students. The application manages users, classes, courses, enrollments, academic progress, and role-based access.",
-tags: ["Laravel", "PHP", "MySQL", "Blade", "Bootstrap"],
-color: "#39d98a",
-emoji: "📚",
-href: "https://github.com/Ihsane-benmouina/EduQuiz-Application-de-Quiz.git"
-},
+    title: "EduQuiz — Academic Management Platform",
+    desc: "Contributed to a team-based academic management platform featuring dedicated dashboards for administrators, teachers, and students. The application manages users, classes, courses, enrollments, academic progress, and role-based access.",
+    tags: ["Laravel", "PHP", "MySQL", "Blade", "Bootstrap"],
+    color: "#39d98a",
+    emoji: "📚",
+    href: "https://github.com/Ihsane-benmouina/EduQuiz-Application-de-Quiz.git",
+    demo: null
+  },
 ];
 
 function ProjectCard({ project }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <a href={project.href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ background: hovered ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)", border: `1px solid ${hovered ? project.color + "55" : "rgba(255,255,255,0.08)"}`, borderRadius: 16, overflow: "hidden", transition: "all 0.35s ease", transform: hovered ? "translateY(-6px)" : "translateY(0)", boxShadow: hovered ? `0 16px 50px ${project.color}22` : "none", cursor: "pointer" }}>
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ background: hovered ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)", border: `1px solid ${hovered ? project.color + "55" : "rgba(255,255,255,0.08)"}`, borderRadius: 16, overflow: "hidden", transition: "all 0.35s ease", transform: hovered ? "translateY(-6px)" : "translateY(0)", boxShadow: hovered ? `0 16px 50px ${project.color}22` : "none" }}>
       <div style={{ height: 150, position: "relative", overflow: "hidden", background: `linear-gradient(135deg, ${project.color}22, ${project.color}08)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ fontSize: 60, opacity: hovered ? 1 : 0.7, transition: "all 0.3s", transform: hovered ? "scale(1.1)" : "scale(1)" }}>{project.emoji}</div>
         <div style={{ position: "absolute", inset: 0, background: hovered ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.25)", transition: "background 0.3s" }} />
-        {hovered && (
-          <div style={{ position: "absolute", bottom: 10, right: 10 }}>
-            <button style={{ background: project.color, color: "#000", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif" }}>View on GitHub ↗</button>
-          </div>
-        )}
       </div>
       <div style={{ padding: "1rem 1.25rem" }}>
         <h3 style={{ color: "#fff", fontSize: 15, fontWeight: 700, marginBottom: 6, fontFamily: "'Space Grotesk', sans-serif" }}>{project.title}</h3>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, lineHeight: 1.6, marginBottom: "0.75rem", fontFamily: "'Space Grotesk', sans-serif" }}>{project.desc}</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: "0.9rem" }}>
           {project.tags.map(t => (
             <span key={t} style={{ fontSize: 10, padding: "3px 8px", borderRadius: 4, background: `${project.color}18`, color: project.color, border: `1px solid ${project.color}33`, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 }}>{t}</span>
           ))}
         </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <a href={project.href} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textAlign: "center", background: project.color, color: "#000", border: "none", borderRadius: 6, padding: "8px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif", textDecoration: "none" }}>GitHub ↗</a>
+          {project.demo && (
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textAlign: "center", background: "transparent", color: project.color, border: `1px solid ${project.color}`, borderRadius: 6, padding: "8px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif", textDecoration: "none" }}>Live Demo ↗</a>
+          )}
+        </div>
       </div>
     </div>
-    </a>
   );
 }
 
@@ -572,10 +707,10 @@ function ProjectsSection() {
 function ExperienceSection() {
   const isMobile = useIsMobile();
   const items = [
-    { year: "2025–2026", title: "Spécialisation Développement Web PHP", org: "ENAA — École Numérique Ahmed Al Hansali", desc: "Advanced specialization in PHP web development, deepening full-stack skills built during the ISTA program.", color: COLORS.cyan, icon: "💻" },
-    { year: "2022–2024", title: "Technicien Spécialisé en Infrastructures Digitales", org: "ISTA NTIC Beni Mellal — Option Systèmes et Réseaux", desc: "Specialized diploma in digital infrastructure: networking, system administration, virtualization, and PHP/Laravel web development.", color: COLORS.purple, icon: "🎓" },
-    { year: "2023", title: "CCNAv7 – Introduction to Networks", org: "Cisco Networking Academy", desc: "OSI model, TCP/IP, basic routing and switching, IPv4/IPv6 addressing, and Ethernet technologies.", color: COLORS.blue, icon: "🌐" },
-    { year: "2023", title: "CCNAv7 – Enterprise Networking, Security & Automation", org: "Cisco Networking Academy", desc: "OSPF, BGP, ACLs, VPNs, network security concepts, and automation fundamentals.", color: "#00ff88", icon: "🔒" },
+    { year: "2025–2026", title: "Spécialisation Développement Web PHP", org: "ENAA — École Numérique Ahmed Al Hansali", desc: "Advanced specialization in PHP web development, deepening full-stack skills built during the ISTA program.", color: COLORS.cyan, icon: "💻", kind: "Education" },
+    { year: "2022–2024", title: "Technicien Spécialisé en Infrastructures Digitales", org: "ISTA NTIC Beni Mellal — Option Systèmes et Réseaux", desc: "Specialized diploma in digital infrastructure: networking, system administration, virtualization, and PHP/Laravel web development.", color: COLORS.purple, icon: "🎓", kind: "Education" },
+    { year: "2023", title: "CCNAv7 – Introduction to Networks", org: "Cisco Networking Academy", desc: "OSI model, TCP/IP, basic routing and switching, IPv4/IPv6 addressing, and Ethernet technologies.", color: COLORS.blue, icon: "🌐", kind: "Certification" },
+    { year: "2023", title: "CCNAv7 – Enterprise Networking, Security & Automation", org: "Cisco Networking Academy", desc: "OSPF, BGP, ACLs, VPNs, network security concepts, and automation fundamentals.", color: "#00ff88", icon: "🔒", kind: "Certification" },
   ];
 
   if (isMobile) {
@@ -584,7 +719,7 @@ function ExperienceSection() {
       <SectionDivider color1="#4f8ef7" color2="#b855ff" />
       <section id="experience" style={{ padding: "70px 1.25rem", position: "relative" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <SectionHeader tag="04. Experience & Education" title="My Journey" />
+          <SectionHeader tag="04. Education & Certifications" title="My Journey" />
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", paddingLeft: "1.5rem", borderLeft: `2px solid rgba(0,245,255,0.2)` }}>
             {items.map((item, i) => (
               <Reveal key={item.title} effect="fadeLeft" delay={i * 120}>
@@ -592,7 +727,7 @@ function ExperienceSection() {
                 <div style={{ position: "absolute", left: -28, top: 18, width: 14, height: 14, borderRadius: "50%", background: item.color, boxShadow: `0 0 12px ${item.color}` }} />
                 <GlassCard accentColor={item.color} style={{ padding: "1rem" }}>
                   <span style={{ fontSize: 20, marginBottom: 6, display: "block" }}>{item.icon}</span>
-                  <span style={{ fontSize: 11, color: item.color, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: 1 }}>{item.year}</span>
+                  <span style={{ fontSize: 11, color: item.color, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: 1 }}>{item.kind} · {item.year}</span>
                   <h3 style={{ color: "#fff", fontSize: 14, fontWeight: 700, margin: "5px 0", fontFamily: "'Space Grotesk', sans-serif" }}>{item.title}</h3>
                   <div style={{ fontSize: 12, color: item.color, marginBottom: 6, fontFamily: "'Space Grotesk', sans-serif" }}>{item.org}</div>
                   <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0, fontFamily: "'Space Grotesk', sans-serif" }}>{item.desc}</p>
@@ -613,7 +748,7 @@ function ExperienceSection() {
     <section id="experience" style={{ padding: "100px 2rem", position: "relative" }}>
       <GlowOrb x="-5%" y="50%" color={COLORS.cyan} size={300} />
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <SectionHeader tag="04. Experience & Education" title="My Journey" center />
+        <SectionHeader tag="04. Education & Certifications" title="My Journey" center />
         <div style={{ position: "relative" }}>
           <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 1, background: "linear-gradient(180deg, transparent, rgba(0,245,255,0.3), transparent)", transform: "translateX(-50%)" }} />
           {items.map((item, i) => (
@@ -622,7 +757,7 @@ function ExperienceSection() {
               <div style={{ flex: 1 }}>
                 <GlassCard accentColor={item.color}>
                   <div style={{ fontSize: 24, marginBottom: 6 }}>{item.icon}</div>
-                  <span style={{ fontSize: 11, color: item.color, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: 1 }}>{item.year}</span>
+                  <span style={{ fontSize: 11, color: item.color, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: 1 }}>{item.kind} · {item.year}</span>
                   <h3 style={{ color: "#fff", fontSize: 14, fontWeight: 700, margin: "5px 0", fontFamily: "'Space Grotesk', sans-serif" }}>{item.title}</h3>
                   <div style={{ fontSize: 12, color: item.color, marginBottom: 6, fontFamily: "'Space Grotesk', sans-serif" }}>{item.org}</div>
                   <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0, fontFamily: "'Space Grotesk', sans-serif" }}>{item.desc}</p>
@@ -645,7 +780,7 @@ const SERVICES = [
   { icon: "🌐", title: "Network Design", desc: "LAN/WAN architecture, IP addressing & subnetting, routing, and network documentation.", color: "#00f5ff" },
   { icon: "🖥️", title: "Server Admin", desc: "Windows Server & Linux setup, system administration, and maintenance.", color: "#4f8ef7" },
   { icon: "☁️", title: "Virtualization", desc: "VirtualBox & VMware setup, VM deployment and configuration.", color: "#b855ff" },
-  { icon: "📱", title: "Mobile & UI", desc: "Flutter app basics, UML modeling (Use Case, Class, ERD) with Figma, Lucidchart and StarUML.", color: "#ffd700" },
+  { icon: "🐳", title: "Dockerized Deployments", desc: "Containerizing full-stack apps with Docker for consistent, portable environments.", color: "#ffd700" },
   { icon: "📊", title: "IT Consulting", desc: "Infrastructure planning, tech evaluation, and digital transformation roadmaps.", color: "#ff6b6b" },
 ];
 
@@ -803,11 +938,12 @@ export default function Portfolio() {
           * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         }
       `}</style>
-      <PhotoBackground />
-      <CodeRain />
+      <VideoBackground />
+<CodeRain /> 
       <Navbar active={active} />
       <HeroSection />
       <AboutSection />
+      <WhatIBuildSection />
       <SkillsSection />
       <ProjectsSection />
       <ExperienceSection />
